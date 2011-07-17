@@ -19,16 +19,40 @@ Version: 1.0
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-require_once dirname( __FILE__ ) . '/base.min.css';
-require_once dirname( __FILE__ ) . '/qq.min.js';
-
+	//Loads the javascript and css files
+	function init_scripts() {
+	  wp_enqueue_script( 'jquery' );
+	  wp_enqueue_script( 'qq', 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js', array( 'jquery' ) );
+	  wp_register_style( 'base', 'http://www.worldnomads.com/turnstile/qp/common/styles/base.min.css' );
+	  wp_enqueue_style('base');
+	}    
+	 
+	add_action('init', 'init_scripts');
+		
+	//Loads the quick quote calculator
+	function display_qq_calculator() {
 ?>
-  <div id="wrapper">
+ 
+   <style type="text/css" media="screen">    
+    #wn_quote_panel #wn_qq_146x429 { padding:10px; width:175px; height:429px; background:#fff; border:1px solid #d1d1d1;  -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
+	#wn_quote_panel #wn_qq_146x429,
+	#wn_quote_panel #wn_qq_146x429 p,
+	#wn_quote_panel #wn_qq_146x429 fieldset { font-size: 11px; color: #555; }
+    #wn_quote_panel #wn_qq_146x429 #policy_type { position:relative; }
+    #wn_quote_panel #wn_qq_146x429 #policy_type .submit { float: right; margin-top: 10px;}
+    #wn_quote_panel #wn_qq_146x429 .wn_footer{clear:both; margin-top:10px; border-top:1px solid #eee; padding-top:10px; position:relative; }
+    #wn_quote_panel #wn_qq_146x429 #wn_logo { position:relative; float:right; }
+  </style>
+  
     <div id="wn_quote_panel">
-         <div id="wn_qq_192x444">
-            <h2>Travel Insurance</h2>
+         <div id="wn_qq_146x429">
+            <h2>
+              Travel Insurance
+              <br>
+        <span>Simple &amp; Flexible.</span>
+            </h2>
 
-            <form action="http://www.worldnomads.com/afturnstile.aspx" method="get">
+            <form action="http://www.worldnomads.com/afturnstile.aspx" method="get" target="_blank">
               <fieldset id="hidden-fields">
                 <input type="hidden" name="affiliate" id="qp3_affiliate" value="<INSERT CODE HERE>">
                 <input type="hidden" name="utm_source" id="qp3_utm_source" value="<INSERT CODE HERE>">
@@ -88,4 +112,17 @@ require_once dirname( __FILE__ ) . '/qq.min.js';
 				<img src="http://www.worldnomads.com/turnstile/qp/common/images/wn_logo_125_tagline.png" width="130" height="31" alt="World Nomads - Keep travelling safely" id="wn_logo">
 	          </div>
             </form></div>
-    </div>
+
+<?php
+    }
+    
+	//Places the widget in the sidebar
+    wp_register_sidebar_widget(
+        'qq-calculator-1',        // nique widget id
+        'Quote Calculator',       // widget name
+        'display_qq_calculator',  // callback function
+        array(                    // options
+            'description' => 'A calculator which gets a travel insurance quote from World Nomads'
+        )
+    );
+?>  
